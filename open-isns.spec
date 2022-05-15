@@ -42,7 +42,7 @@ Biblioteka współdzielona Open-iSNS.
 Summary:	Header files for Open-iSNS library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki Open-iSNS
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files for Open-iSNS library.
