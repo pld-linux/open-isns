@@ -6,17 +6,19 @@
 Summary:	Partial implementation of iSNS (RFC 4171)
 Summary(pl.UTF-8):	Częściowa implementacja iSNS (RFC 4171)
 Name:		open-isns
-Version:	0.101
+Version:	0.102
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 #Source0Download: https://github.com/open-iscsi/open-isns/releases
 Source0:	https://github.com/open-iscsi/open-isns/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	bd017a07d685b9c87e0da29fc3f899a2
+# Source0-md5:	914f7654ff7398dd4dcf69885f2fc691
 URL:		https://github.com/open-iscsi/open-isns
-BuildRequires:	automake
+BuildRequires:	meson >= 0.54.0
+BuildRequires:	ninja
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 2.011
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	systemd-units >= 1:250.1
@@ -67,18 +69,16 @@ Statyczna biblioteka Open-iSNS.
 %setup -q
 
 %build
-cp -f /usr/share/automake/config.sub aclocal
-%configure \
-	--enable-shared \
-	%{!?with_static_libs:--disable-static}
-%{__make}
+%meson build \
+	-Dsystemddir=%{_systemd_util_dir} \
+	%{!?with_static_libs:--default-library=shared}
+
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install install_hdrs install_lib \
-	DESTDIR=$RPM_BUILD_ROOT \
-	systemddir=%{systemdunitdir}
+%ninja_install -C build
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -111,7 +111,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/isnsadm.8*
 %{_mandir}/man8/isnsd.8*
 %{_mandir}/man8/isnsdd.8*
-%{_mandir}/man8/isnssetup.8*
 
 %files libs
 %defattr(644,root,root,755)
@@ -122,6 +121,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libisns.so
 %{_includedir}/libisns
+%{_pkgconfigdir}/libisns.pc
 
 %if %{with static_libs}
 %files static
