@@ -14,6 +14,7 @@ Group:		Libraries
 Source0:	https://github.com/open-iscsi/open-isns/archive/v%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	bd017a07d685b9c87e0da29fc3f899a2
 URL:		https://github.com/open-iscsi/open-isns
+BuildRequires:	automake
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	rpmbuild(macros) >= 2.011
@@ -66,6 +67,7 @@ Statyczna biblioteka Open-iSNS.
 %setup -q
 
 %build
+cp -f /usr/share/automake/config.sub aclocal
 %configure \
 	--enable-shared \
 	%{!?with_static_libs:--disable-static}
