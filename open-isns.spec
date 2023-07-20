@@ -2,6 +2,7 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static libraries
+%bcond_without	systemd		# systemd
 #
 Summary:	Partial implementation of iSNS (RFC 4171)
 Summary(pl.UTF-8):	Częściowa implementacja iSNS (RFC 4171)
@@ -70,7 +71,7 @@ Statyczna biblioteka Open-iSNS.
 
 %build
 %meson build \
-	-Dsystemddir=%{_systemd_util_dir} \
+	%{?with_systemd:-Dsystemddir=%{_systemd_util_dir}} \
 	%{!?with_static_libs:--default-library=shared}
 
 %ninja_build -C build
@@ -104,8 +105,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/isns/isnsadm.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/isns/isnsd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/isns/isnsdd.conf
+%if %{with systemd}
 %{systemdunitdir}/isnsd.service
 %{systemdunitdir}/isnsd.socket
+%endif
 %dir /var/lib/isns
 %{_mandir}/man5/isns_config.5*
 %{_mandir}/man8/isnsadm.8*
