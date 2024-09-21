@@ -1,8 +1,8 @@
 # TODO: SysV init script? (Fedora has some old one)
 #
 # Conditional build:
-%bcond_without	static_libs	# static libraries
-%bcond_without	systemd		# systemd
+%bcond_without	static_libs	# static library
+%bcond_without	systemd		# systemd units
 #
 Summary:	Partial implementation of iSNS (RFC 4171)
 Summary(pl.UTF-8):	Częściowa implementacja iSNS (RFC 4171)
@@ -84,6 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with systemd}
 %post
 %systemd_post isnsd.service
 
@@ -92,6 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun
 %systemd_postun isnsd.service
+%endif
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
