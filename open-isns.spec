@@ -7,16 +7,16 @@
 Summary:	Partial implementation of iSNS (RFC 4171)
 Summary(pl.UTF-8):	Częściowa implementacja iSNS (RFC 4171)
 Name:		open-isns
-Version:	0.102
+Version:	0.103
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 #Source0Download: https://github.com/open-iscsi/open-isns/releases
 Source0:	https://github.com/open-iscsi/open-isns/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	914f7654ff7398dd4dcf69885f2fc691
+# Source0-md5:	1dad040330c0c6d78d3046f643e50885
 URL:		https://github.com/open-iscsi/open-isns
 BuildRequires:	meson >= 0.54.0
-BuildRequires:	ninja
+BuildRequires:	ninja >= 1.5
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
@@ -71,6 +71,8 @@ Statyczna biblioteka Open-iSNS.
 
 %build
 %meson \
+	-Dsecurity=enabled \
+	-Dslp=enabled \
 	%{?with_systemd:-Dsystemddir=%{_systemd_util_dir}} \
 	%{!?with_static_libs:--default-library=shared}
 
@@ -119,7 +121,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%doc ChangeLog README TODO
+%doc ChangeLog README.md TODO
 %attr(755,root,root) %{_libdir}/libisns.so.0
 
 %files devel
