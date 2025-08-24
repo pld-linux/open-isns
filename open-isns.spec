@@ -20,7 +20,7 @@ BuildRequires:	ninja
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 2.011
+BuildRequires:	rpmbuild(macros) >= 2.042
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	systemd-units >= 1:250.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
